@@ -1,0 +1,14 @@
+app:
+  csv: questions_and_answers
+
+spring:
+  messages:
+    encoding: UTF-8
+    basename: messages
+    fallback-to-system-locale: true
+    use-code-as-default-message: true
+  main:
+    allow-circular-references: true
+  shell:
+    interactive.enabled: false
+
