@@ -4,7 +4,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.otus.spring.dao.QuestionDao;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -12,11 +11,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class QuestionDaoCsvFileTest {
 
     @Autowired
-    QuestionDao questionDao;
+    QuestionDaoCsvFile questionDaoCsvFile;
 
     @Test
-    @DisplayName("Получает верное кол-во ответов.")
+    @DisplayName("Получает верное кол-во вопросов.")
     void findAllAnswers() {
-        assertEquals(5, questionDao.findAllQuestions().size());
+        assertEquals(5, questionDaoCsvFile.findAllQuestions().size());
     }
 }
