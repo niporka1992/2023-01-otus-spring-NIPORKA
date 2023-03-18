@@ -16,7 +16,7 @@ public class ResultServiceImpl implements ResultService {
     public void show(TestingResult result) {
         String name = result.getStudent().getName();
         String answers = localizationIOService.getMessage("string.correct.answers") + SEPARATOR;
-        String from = localizationIOService.getMessage("string.from") + SEPARATOR;
+        String from = localizationIOService.getMessage(("string.from")) + SEPARATOR;
         String questions = localizationIOService.getMessage("string.questions") + SEPARATOR;
         String totalQuestions = result.getTotalQuestions() + SEPARATOR;
         String score = result.getScore() + SEPARATOR;

@@ -10,7 +10,7 @@ import java.util.Locale;
 public class LocaleProviderImpl implements LocaleProvider {
     private final Locale locale;
 
-    public LocaleProviderImpl(@Value("${app.locale:ru}") Locale locale) {
+    public LocaleProviderImpl(@Value("${app.locale}") Locale locale) {
         this.locale = locale;
     }
 

@@ -4,5 +4,7 @@ public interface LocalizationIOService {
     void outputMessage(String name);
 
     String getMessage(String name);
+
+    String readString();
 }
 

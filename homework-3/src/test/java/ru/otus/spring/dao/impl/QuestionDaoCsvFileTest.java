@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class QuestionDaoCsvFileTest {
 
     @Autowired
-    QuestionDaoCsvFile questionDaoCsvFile;
+    private QuestionDaoCsvFile questionDaoCsvFile;
 
     @Test
     @DisplayName("Получает верное кол-во вопросов.")

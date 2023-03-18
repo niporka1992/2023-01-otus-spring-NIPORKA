@@ -7,16 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import ru.otus.spring.domain.Student;
-import ru.otus.spring.service.IO.IOService;
 import ru.otus.spring.service.StudentService;
+import ru.otus.spring.service.l10n.LocalizationIOService;
 
 @SpringBootTest
 class StudentServiceImplTest {
 
     @MockBean
-    IOService ioService;
+    private LocalizationIOService localizationIOService;
     @Autowired
-    StudentService studentService;
+    private StudentService studentService;
 
     @Test
     @DisplayName("Должен создавать студента.")
