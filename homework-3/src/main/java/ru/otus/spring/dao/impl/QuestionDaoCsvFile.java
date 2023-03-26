@@ -17,8 +17,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static java.util.stream.Collectors.toCollection;
-
 @Component
 @RequiredArgsConstructor
 public class QuestionDaoCsvFile implements QuestionDao {
@@ -29,16 +27,21 @@ public class QuestionDaoCsvFile implements QuestionDao {
 
     @Override
     public List<Question> findAllQuestions() {
+        List<Question> questions = new ArrayList<>();
         var resourceName = questionResourceNameProvider.getResourceName();
         try (InputStream resourceAsStream = resourceLoader.getResource(resourceName).getInputStream()) {
             InputStreamReader inputStreamReader = new InputStreamReader(resourceAsStream);
             BufferedReader reader = new BufferedReader(inputStreamReader);
-            return reader.lines()
-                    .map(line -> {
-                        String[] csvRecord = line.split(SEPARATOR);
-                        return new Question(csvRecord[1].strip(), csvRecord[2].strip());
-                    })
-                    .collect(toCollection(ArrayList::new));
+            reader.lines()
+                    .forEach(line -> {
+                        try {
+                            String[] csvRecord = line.split(SEPARATOR);
+                            questions.add(new Question(csvRecord[1].strip(), csvRecord[2].strip()));
+                        } catch (ArrayIndexOutOfBoundsException e) {
+                            LOGGER.error("CSV contains ERROR");
+                        }
+                    });
+            return questions;
         } catch (IOException exception) {
             LOGGER.error("Resource " + resourceName + " is not available");
         }
