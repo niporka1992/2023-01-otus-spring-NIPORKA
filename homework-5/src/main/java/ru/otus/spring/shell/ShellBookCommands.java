@@ -9,6 +9,8 @@ import ru.otus.spring.domain.Book;
 import ru.otus.spring.domain.Genre;
 import ru.otus.spring.service.BookService;
 
+import java.util.List;
+
 @ShellComponent
 @RequiredArgsConstructor
 public class ShellBookCommands {
@@ -28,14 +30,23 @@ public class ShellBookCommands {
             @ShellOption(value = {"authorId"}, help = "id автора") long authorId,
             @ShellOption(value = {"genreId"}, help = "id жанра") long genreId) {
 
-        long id = bookService.save(new Book(name, new Author(authorId), new Genre(genreId)));
-        return "Книга сохранена с id - " + id;
+        Book book = bookService.save(new Book(name, new Author(authorId), new Genre(genreId)));
+        return "Книга сохранена - " + book;
     }
 
     @ShellMethod(value = "Получить книгу по номеру", key = {"get book", "gb"})
     public String getBook(@ShellOption(value = {"id"}) long id) {
         Book book = bookService.findById(id);
-        return "Название книги - " + book.name();
+        return book.toString();
+    }
+
+    @ShellMethod(value = "Показать все книги ", key = {"get all books", "gab"})
+    public String getAllBooks() {
+        List<Book> bookList = bookService.findAll();
+        StringBuilder stringBuilder = new StringBuilder();
+        bookList.forEach(x -> stringBuilder.append(x).append("\n"));
+
+        return stringBuilder.toString();
     }
 
     @ShellMethod(value = "Удалить книгу по номеру", key = {"delete book", "db"})

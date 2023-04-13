@@ -20,7 +20,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public long save(Author author) {
+    public Author save(Author author) {
         return authorDao.insert(author);
     }
 
@@ -40,8 +40,8 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public long updateById(long id, Author author) {
-        return authorDao.updateById(id, new Author(author.name(), author.surname()));
+    public Author updateById(long id, String name, String surname) {
+        return authorDao.updateById(id, name, surname);
     }
 
     @Override

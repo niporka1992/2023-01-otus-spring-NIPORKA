@@ -20,7 +20,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public long save(Book book) {
+    public Book save(Book book) {
         return bookDao.insert(book);
     }
 
@@ -35,8 +35,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public long updateById(long id, Book book) {
-        return bookDao.updateById(id, book);
+    public Book updateById(long id, Book book) {
+        return bookDao.updateById(id,book);
     }
 
     @Override

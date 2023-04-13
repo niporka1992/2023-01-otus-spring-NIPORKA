@@ -20,42 +20,42 @@ import java.util.Objects;
 @Repository
 @RequiredArgsConstructor
 public class GenreDaoJdbc implements GenreDao {
+
     private final NamedParameterJdbcOperations namedParameterJdbcOperations;
 
     @Override
     public long count() {
         Integer count = namedParameterJdbcOperations.getJdbcOperations().queryForObject(
                 "select count(*) from genres", Integer.class);
-
         return count == null ? 0 : count;
     }
 
     @Override
-    public long insert(Genre genre) {
+    public Genre insert(Genre genre) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", genre.id());
         params.addValue("name", genre.name());
 
         namedParameterJdbcOperations.update(
-                "insert into genres (id,name) values (:id,:name)", params, keyHolder);
+                "insert into genres (name) values (:name)", params, keyHolder);
+        long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
 
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        return new Genre(id, genre.name());
     }
 
     @Override
-    public long updateById(long id, Genre genre) {
-        Map<String, Object> params = Map.of("id", id, "name", genre.name());
+    public Genre updateById(long id, String name) {
+        Map<String, Object> params = Map.of("id", id, "name", name);
+        namedParameterJdbcOperations.update(
+                "update genres set name = :name  where id = :id", params);
 
-        return namedParameterJdbcOperations.update(
-                "update genres set name = :name, surname = :surname where id = :id", params);
+        return new Genre(id, name);
     }
 
     @Override
     public Genre getById(long id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
-
         return namedParameterJdbcOperations.queryForObject(
                 "select id, name from genres where id = :id", params, new GenreMapper());
     }
@@ -63,25 +63,24 @@ public class GenreDaoJdbc implements GenreDao {
     @Override
     public Genre getByName(String name) {
         Map<String, Object> params = Collections.singletonMap("name", name);
-
         return namedParameterJdbcOperations.queryForObject(
                 "select id, name from genres where name = :name", params, new GenreMapper());
     }
 
     @Override
     public List<Genre> getAll() {
-        return namedParameterJdbcOperations.query("select id, name, surname from genres", new GenreMapper());
+        return namedParameterJdbcOperations.query("select id, name from genres", new GenreMapper());
     }
 
     @Override
     public long deleteById(long id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
-
         return namedParameterJdbcOperations.update(
                 "delete from genres where id = :id", params);
     }
 
     private static class GenreMapper implements RowMapper<Genre> {
+
         @Override
         public Genre mapRow(ResultSet rs, int rowNum) throws SQLException {
             long id = rs.getLong("id");

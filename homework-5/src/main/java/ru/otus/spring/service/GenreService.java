@@ -7,7 +7,7 @@ import java.util.List;
 public interface GenreService {
     long getCount();
 
-    long save(Genre genre);
+    Genre save(Genre genre);
 
     List<Genre> findAll();
 
@@ -15,7 +15,7 @@ public interface GenreService {
 
     Genre findByName(String name);
 
-    long updateById(long id, Genre genre);
+    Genre updateById(long id, String name);
 
     long deleteById(long id);
 }

@@ -20,7 +20,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    public long save(Genre genre) {
+    public Genre save(Genre genre) {
         return genreDao.insert(genre);
     }
 
@@ -40,8 +40,8 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    public long updateById(long id, Genre genre) {
-        return genreDao.updateById(id, new Genre(genre.name()));
+    public Genre updateById(long id, String name) {
+        return genreDao.updateById(id, name);
     }
 
     @Override

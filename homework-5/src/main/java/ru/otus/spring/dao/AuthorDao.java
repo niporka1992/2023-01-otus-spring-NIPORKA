@@ -8,9 +8,9 @@ public interface AuthorDao {
 
     long count();
 
-    long insert(Author author);
+    Author insert(Author author);
 
-    long updateById(long id, Author author);
+    Author updateById(long id, String name, String surname);
 
     Author getById(long id);
 

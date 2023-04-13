@@ -8,6 +8,8 @@ import org.springframework.shell.standard.ShellOption;
 import ru.otus.spring.domain.Author;
 import ru.otus.spring.service.AuthorService;
 
+import java.util.List;
+
 @ShellComponent
 @RequiredArgsConstructor
 public class ShellAuthorCommands {
@@ -19,8 +21,16 @@ public class ShellAuthorCommands {
             @ShellOption(value = {"name"}) String name,
             @ShellOption(value = {"surname"}) String surname) {
 
-        long id = authorService.save(new Author(name, surname));
-        return "Автор сохранен с id - " + id;
+        Author author = authorService.save(new Author(name, surname));
+        return "Автор сохранен - " + author.id();
     }
 
+    @ShellMethod(value = "Показать всех авторов ", key = {"get all authors", "gaa"})
+    public String getAllAuthors() {
+        List<Author> authorList = authorService.findAll();
+        StringBuilder stringBuilder = new StringBuilder();
+        authorList.forEach(x -> stringBuilder.append(x).append("\n"));
+
+        return stringBuilder.toString();
+    }
 }

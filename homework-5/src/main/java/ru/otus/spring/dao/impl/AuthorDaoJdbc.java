@@ -30,7 +30,7 @@ public class AuthorDaoJdbc implements AuthorDao {
     }
 
     @Override
-    public long insert(Author author) {
+    public Author insert(Author author) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         MapSqlParameterSource params = new MapSqlParameterSource();
 
@@ -40,22 +40,22 @@ public class AuthorDaoJdbc implements AuthorDao {
         namedParameterJdbcOperations.update(
                 "insert into authors (name, surname) values ( :name, :surname)", params, keyHolder);
 
-        return Objects.requireNonNull(keyHolder.getKey()).longValue();
+        long id = Objects.requireNonNull(keyHolder.getKey()).longValue();
 
+        return new Author(id, author.name(), author.surname());
     }
 
     @Override
-    public long updateById(long id, Author author) {
-        Map<String, Object> params = Map.of("id", id, "name", author.name(), "surname", author.surname());
-
-        return namedParameterJdbcOperations.update(
+    public Author updateById(long id, String name, String surname) {
+        Map<String, Object> params = Map.of("id", id, "name", name, "surname", surname);
+        namedParameterJdbcOperations.update(
                 "update authors set name = :name, surname = :surname where id = :id", params);
+        return new Author(id, name, surname);
     }
 
     @Override
     public Author getById(long id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
-
         return namedParameterJdbcOperations.queryForObject(
                 "select id, name, surname from authors where id = :id", params, new AuthorMapper());
     }
@@ -63,7 +63,6 @@ public class AuthorDaoJdbc implements AuthorDao {
     @Override
     public Author getByNameAndSurname(String name, String surname) {
         Map<String, Object> params = Map.of("name", name, "surname", surname);
-
         return namedParameterJdbcOperations.queryForObject(
                 "select id, name, surname from authors where name = :name and surname = :surname", params, new AuthorMapper());
     }
@@ -77,7 +76,6 @@ public class AuthorDaoJdbc implements AuthorDao {
     @Override
     public long deleteById(long id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
-
         return namedParameterJdbcOperations.update(
                 "delete from authors where id = :id", params);
     }

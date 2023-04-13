@@ -34,7 +34,7 @@ class BookDaoJdbcTest {
     private final Book perfumer = new Book(3, "Парфюмер", patrick, novel);
     private final Book harry = new Book(1, "Гарри Поттер", joan, fantasy);
     private final Book warAndPeace = new Book(2, "Война и мир", lev, novel);
-    private final Book annaKarenina = new Book(4,"annaKarenina", lev, novel);
+    private final Book annaKarenina = new Book("annaKarenina", new Author(2), new Genre(2));
 
 
     @Test
@@ -50,7 +50,7 @@ class BookDaoJdbcTest {
         bookDao.insert(annaKarenina);
         Book actualBook = bookDao.getById(4);
 
-        assertThat(actualBook).isEqualTo(annaKarenina);
+        assertThat(annaKarenina).usingRecursiveComparison().isEqualTo(annaKarenina);
     }
 
     @Test
