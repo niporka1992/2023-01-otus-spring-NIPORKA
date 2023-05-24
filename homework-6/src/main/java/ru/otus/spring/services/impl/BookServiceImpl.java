@@ -12,8 +12,6 @@ import ru.otus.spring.repositories.GenreRepository;
 import ru.otus.spring.services.BookService;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -37,26 +35,27 @@ public class BookServiceImpl implements BookService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<String> findAll() {
-        return bookRepository.getAll().stream().map(Book::toString).collect(Collectors.toList());
+    public List<Book> findAll() {
+        List<Book> bookList = bookRepository.getAllWithAuthorAndGenre();
+        bookList.forEach(Book::getComments);
+        return bookList;
     }
 
     @Transactional(readOnly = true)
     @Override
     public String findById(long id) {
-        Optional<Book> book = bookRepository.getById(id);
-        if (book.isEmpty()) {
-            return "Такой книги нет";
-        }
-        return book.get().toString();
+        return bookRepository.getById(id)
+                .map(book -> "Книга" + book)
+                .orElse("Такой книги нет");
     }
+
 
     @Transactional
     @Override
     public String updateById(long id, Book book) {
         if (bookRepository.getById(id).isPresent()) {
-            boolean result = bookRepository.updateById(id, book);
-            return result ? "Книга обновлена." : "Ошибка";
+            bookRepository.updateById(id, book);
+            return "Книга обновлена.";
         }
         return "Такой книги нет";
     }
@@ -65,8 +64,8 @@ public class BookServiceImpl implements BookService {
     @Override
     public String deleteById(long id) {
         if (bookRepository.getById(id).isPresent()) {
-            boolean result = bookRepository.deleteById(id);
-            return result ? "Книга удалена" : "Ошибка";
+            bookRepository.deleteById(id);
+            return "Книга удалена";
         } else return "Такой книги нет";
     }
 }

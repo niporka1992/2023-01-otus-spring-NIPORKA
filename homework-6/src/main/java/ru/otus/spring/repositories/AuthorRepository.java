@@ -9,13 +9,13 @@ public interface AuthorRepository {
 
     Author insert(Author author);
 
-    boolean updateById(long id, String name, String surname);
+    void updateById(long id, Author author);
 
     Optional<Author> getById(long id);
 
     List<Author> getAll();
 
-    boolean deleteById(long id);
+    void deleteById(long id);
 
     List<Author> getByNameAndSurname(String name, String surname);
 }

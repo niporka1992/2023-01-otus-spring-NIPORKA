@@ -7,8 +7,8 @@ import ru.otus.spring.entities.Genre;
 import ru.otus.spring.repositories.GenreRepository;
 import ru.otus.spring.services.GenreService;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,41 +20,42 @@ public class GenreServiceImpl implements GenreService {
     @Transactional
     @Override
     public String save(String name) {
+        Genre genre = new Genre(name);
         if (genreRepository.getByName(name).isEmpty()) {
-            return genreRepository.insert(new Genre(name)).get().toString();
+            genreRepository.insert(genre).get();
+            return "Жанр " + genre.getName() + " добавлен";
         } else return "Такой жанр имеется.";
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<String> findAll() {
-        return genreRepository.getAll().stream().map(Genre::toString).collect(Collectors.toList());
+    public List<Genre> findAll() {
+        return genreRepository.getAll();
     }
 
     @Transactional(readOnly = true)
     @Override
     public String findById(long id) {
-        if (genreRepository.getById(id).isPresent()) {
-            return "Жанр найден.";
-        }
-        return "Жанра не существует";
+        return genreRepository.getById(id)
+                .map(genre -> "Жанр - " + genre)
+                .orElse("Такого жанра нет");
     }
 
     @Transactional(readOnly = true)
     @Override
-    public String findByName(String name) {
+    public List<Genre> findByName(String name) {
         if (genreRepository.getByName(name).isEmpty()) {
-            return "Жанра не существует";
+            return Collections.emptyList();
         }
-        return genreRepository.getByName(name).toString();
+        return genreRepository.getByName(name);
     }
 
     @Transactional
     @Override
     public String updateById(long id, String name) {
         if (genreRepository.getById(id).isPresent()) {
-            boolean result = genreRepository.updateById(id, name);
-            return result ? "Жанр обновлен." : "Ошибка";
+            genreRepository.updateById(id, name);
+            return "Жанр обновлен.";
         }
         return "Такого жанра нет";
     }
@@ -63,8 +64,8 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public String deleteById(long id) {
         if (genreRepository.getById(id).isPresent()) {
-            boolean result = genreRepository.deleteById(id);
-            return result ? "Жанр удален." : "Ошибка";
+            genreRepository.deleteById(id);
+            return "Жанр удален.";
         }
         return "Такого жанра нет";
     }

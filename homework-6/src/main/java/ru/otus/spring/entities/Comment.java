@@ -1,15 +1,11 @@
 package ru.otus.spring.entities;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
 
-@Data
 @NoArgsConstructor
 @Entity
 @Table(name = "comments")
-@Transactional
 
 public class Comment {
     @Id
@@ -19,17 +15,47 @@ public class Comment {
     @Column(name = "text")
     private String text;
 
-    @Column(name = "book_id", nullable = false)
-    private long bookId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Book book;
 
-    public Comment(String text, long bookId) {
+    public Comment(String text, Book book) {
         this.text = text;
-        this.bookId = bookId;
+        this.book = book;
     }
 
-    public Comment(long id, String text, long bookId) {
+    public Comment(long id, String text, Book book) {
         this.id = id;
         this.text = text;
-        this.bookId = bookId;
+        this.book = book;
+    }
+
+    public Comment(long id) {
+        this.id = id;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public Book getBook() {
+        return book;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                ", text='" + text + '\'' +
+                ", bookId=" + book.getId() +
+                ", bookName=" + book.getName() +
+                '}';
     }
 }

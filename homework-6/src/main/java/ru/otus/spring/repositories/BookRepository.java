@@ -8,11 +8,11 @@ import java.util.Optional;
 public interface BookRepository {
     Book insert(Book book);
 
-    boolean updateById(long id, Book book);
+    void updateById(long id, Book book);
 
     Optional<Book> getById(long id);
 
-    List<Book> getAll();
+    List<Book> getAllWithAuthorAndGenre();
 
-    boolean deleteById(long id);
+    void deleteById(long id);
 }

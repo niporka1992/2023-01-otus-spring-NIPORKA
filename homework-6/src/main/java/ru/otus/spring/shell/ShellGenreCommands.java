@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
+import ru.otus.spring.entities.Genre;
 import ru.otus.spring.services.GenreService;
 
 import java.util.List;
@@ -11,7 +12,6 @@ import java.util.List;
 @ShellComponent
 @RequiredArgsConstructor
 public class ShellGenreCommands {
-
     private final GenreService genreService;
 
     @ShellMethod(value = "Создать жанр ", key = {"add genre", "ag"})
@@ -21,9 +21,7 @@ public class ShellGenreCommands {
     }
 
     @ShellMethod(value = "Показать все жанры ", key = {"get all genres", "gag"})
-    public String getAllGenres() {
-
-        List<String> genreList = genreService.findAll();
-        return genreList.stream().sorted().toList().toString();
+    public List<Genre> getAllGenres() {
+        return genreService.findAll();
     }
 }

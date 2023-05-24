@@ -1,18 +1,19 @@
 package ru.otus.spring.repositories.impl;
 
-import org.junit.jupiter.api.Assertions;
+import lombok.val;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
+import ru.otus.spring.entities.Book;
 import ru.otus.spring.entities.Comment;
 import ru.otus.spring.repositories.CommentRepository;
 
-import java.util.NoSuchElementException;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @DisplayName("Тесты JPA для работы с комментариями")
 @Import(CommentRepositoryJpa.class)
@@ -22,49 +23,42 @@ class CommentRepositoryJpaTest {
     @Autowired
     private CommentRepository commentRepository;
 
+    @Autowired
+    private TestEntityManager em;
+
     @Test
     @DisplayName("должен создать комментарий")
     void insert() {
-        Comment expected = new Comment("text", 1);
+        Comment expected = new Comment("text", new Book(1));
         commentRepository.insert(expected);
-        var actual = commentRepository.getById(5).get();
+        val actual = em.find(Comment.class, 5);
         assertThat(actual).isEqualTo(expected);
     }
 
     @Test
     @DisplayName("должен обновить комментарий")
     void updateById() {
-        Comment expected = new Comment(2, "text2", 1);
+        Comment expected = new Comment(2, "text2", new Book(1));
         commentRepository.updateById(1, "author2");
-        Comment actual = commentRepository.getById(2).get();
-        Assertions.assertEquals(expected, actual);
+        val actual = em.find(Comment.class, 2);
+        Assertions.assertThat(actual.getId()).isEqualTo(expected.getId());
+        Assertions.assertThat(actual.getText()).isEqualTo(expected.getText());
     }
 
     @Test
     @DisplayName("должен достать комментарий из библиотеки")
     void getById() {
-        Comment expected = commentRepository.getById(1).get();
-        assertThat(1).isEqualTo(expected.getId());
-    }
-
-    @Test
-    @DisplayName("должен достать комментарий по тексту")
-    void getByText() {
-        Comment expected = commentRepository.getByText("text").get(0);
-        assertThat(1).isEqualTo(expected.getId());
-    }
-
-    @Test
-    @DisplayName("должен достать все комментарии из библиотеки")
-    void getAll() {
-        var commentList = commentRepository.getAll();
-        Assertions.assertEquals(4, commentList.size());
+        val optionalActualComment = commentRepository.getById(1);
+        val expectedComment = em.find(Comment.class, 1);
+        Assertions.assertThat(optionalActualComment).isPresent().get()
+                .usingRecursiveComparison().isEqualTo(expectedComment);
     }
 
     @Test
     @DisplayName("должен удалять комментарий из библиотеки")
     void deleteById() {
         commentRepository.deleteById(1);
-        assertThatThrownBy(() -> commentRepository.getById(1).get()).isInstanceOf(NoSuchElementException.class);
+        val comment = em.find(Comment.class, 1);
+        assertNull(comment);
     }
 }

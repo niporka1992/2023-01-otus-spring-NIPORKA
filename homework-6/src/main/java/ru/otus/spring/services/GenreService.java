@@ -1,16 +1,17 @@
 package ru.otus.spring.services;
 
+import ru.otus.spring.entities.Genre;
+
 import java.util.List;
 
 public interface GenreService {
-
     String save(String name);
 
-    List<String> findAll();
+    List<Genre> findAll();
 
     String findById(long id);
 
-    String findByName(String name);
+    List<Genre> findByName(String name);
 
     String updateById(long id, String name);
 

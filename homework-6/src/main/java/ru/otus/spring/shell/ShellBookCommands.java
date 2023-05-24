@@ -36,9 +36,8 @@ public class ShellBookCommands {
     }
 
     @ShellMethod(value = "Показать все книги ", key = {"get all books", "gab"})
-    public String getAllBooks() {
-        List<String> bookList = bookService.findAll();
-        return bookList.toString();
+    public List<Book> getAllBooks() {
+        return bookService.findAll();
     }
 
     @ShellMethod(value = "Удалить книгу по номеру", key = {"delete book", "db"})

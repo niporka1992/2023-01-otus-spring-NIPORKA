@@ -26,14 +26,12 @@ public class AuthorRepositoryJpa implements AuthorRepository {
     }
 
     @Override
-    public boolean updateById(long id, String name, String surname) {
-        var query = em.createQuery(
-                "update Author a set a.name = :name, a.surname = :surname where a.id = :id");
-        query.setParameter("id", id);
-        query.setParameter("name", name);
-        query.setParameter("surname", surname);
-        int result = query.executeUpdate();
-        return result == 1;
+    public void updateById(long id, Author author) {
+        Author currentAuthor = getById(id).get();
+        em.detach(currentAuthor);
+        currentAuthor.setName(author.getName());
+        currentAuthor.setSurname(author.getSurname());
+        em.merge(currentAuthor);
     }
 
     @Override
@@ -57,10 +55,8 @@ public class AuthorRepositoryJpa implements AuthorRepository {
     }
 
     @Override
-    public boolean deleteById(long id) {
-        var query = em.createQuery("delete from Author a where a.id = :id");
-        query.setParameter("id", id);
-        int result = query.executeUpdate();
-        return result == 1;
+    public void deleteById(long id) {
+        Author author = new Author(id);
+        em.remove(em.contains(author) ? author : em.merge(author));
     }
 }

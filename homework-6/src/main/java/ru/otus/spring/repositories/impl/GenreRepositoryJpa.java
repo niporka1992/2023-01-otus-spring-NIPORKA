@@ -28,11 +28,11 @@ public class GenreRepositoryJpa implements GenreRepository {
     }
 
     @Override
-    public boolean updateById(long id, String name) {
-        var query = em.createQuery("update Genre g set g.name= :name where g.id= :id");
-        query.setParameter("id", id);
-        query.setParameter("name", name);
-        return query.executeUpdate() == 1;
+    public void updateById(long id, String name) {
+        Genre genre = getById(id).get();
+        em.detach(genre);
+        genre.setName(name);
+        em.merge(genre);
     }
 
     @Override
@@ -55,9 +55,8 @@ public class GenreRepositoryJpa implements GenreRepository {
     }
 
     @Override
-    public boolean deleteById(long id) {
-        var query = em.createQuery("delete from Genre g where g.id= :id");
-        query.setParameter("id", id);
-        return query.executeUpdate() == 1;
+    public void deleteById(long id) {
+        Genre genre = new Genre(id);
+        em.remove(em.contains(genre) ? genre : em.merge(genre));
     }
 }

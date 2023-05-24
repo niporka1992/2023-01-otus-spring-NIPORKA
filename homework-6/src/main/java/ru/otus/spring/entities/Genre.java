@@ -4,15 +4,12 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
 
 @Entity
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "genres")
-@Transactional
-
+@Data
 public class Genre {
 
     @Id
@@ -25,5 +22,10 @@ public class Genre {
     public Genre(String name) {
         this.name = name;
     }
+
+    public Genre(long id) {
+        this.id = id;
+    }
+
 }
 

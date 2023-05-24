@@ -9,7 +9,6 @@ import ru.otus.spring.services.CommentService;
 @ShellComponent
 @RequiredArgsConstructor
 public class ShellCommentCommands {
-
     private final CommentService commentService;
 
     @ShellMethod(value = "Создать коммент ", key = {"add comment", "ac"})

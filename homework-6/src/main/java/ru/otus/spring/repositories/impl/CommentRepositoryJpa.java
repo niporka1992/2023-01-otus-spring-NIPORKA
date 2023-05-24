@@ -2,13 +2,11 @@ package ru.otus.spring.repositories.impl;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.otus.spring.entities.Comment;
 import ru.otus.spring.repositories.CommentRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -27,11 +25,11 @@ public class CommentRepositoryJpa implements CommentRepository {
     }
 
     @Override
-    public boolean updateById(long id, String text) {
-        var query = em.createQuery("update Comment c set c.text= :text where c.id= :id");
-        query.setParameter("id", id);
-        query.setParameter("text", text);
-        return query.executeUpdate() == 1;
+    public void updateById(long id, String text) {
+        Comment comment = getById(id).get();
+        em.detach(comment);
+        comment.setText(text);
+        em.merge(comment);
     }
 
     @Override
@@ -40,23 +38,8 @@ public class CommentRepositoryJpa implements CommentRepository {
     }
 
     @Override
-    public List<Comment> getByText(String text) {
-        var query = em.createQuery(
-                "select c from Comment c where c.text= :text", Comment.class);
-        query.setParameter("text", text);
-        return query.getResultList();
-    }
-
-    @Override
-    public List<Comment> getAll() {
-        TypedQuery<Comment> query = em.createQuery("SELECT c FROM Comment c", Comment.class);
-        return query.getResultList();
-    }
-
-    @Override
-    public boolean deleteById(long id) {
-        var query = em.createQuery("delete from Comment c where c.id= :id");
-        query.setParameter("id", id);
-        return query.executeUpdate() == 1;
+    public void deleteById(long id) {
+        Comment comment = new Comment(id);
+        em.remove(em.contains(comment) ? comment : em.merge(comment));
     }
 }

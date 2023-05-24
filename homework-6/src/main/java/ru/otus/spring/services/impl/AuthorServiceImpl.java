@@ -1,5 +1,6 @@
 package ru.otus.spring.services.impl;
 
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,8 +8,9 @@ import ru.otus.spring.entities.Author;
 import ru.otus.spring.repositories.AuthorRepository;
 import ru.otus.spring.services.AuthorService;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +18,7 @@ import java.util.stream.Collectors;
 public class AuthorServiceImpl implements AuthorService {
 
     private final AuthorRepository authorRepository;
+    private final EntityManager entityManager;
 
     @Transactional
     @Override
@@ -27,40 +30,42 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<String> findAll() {
-        return authorRepository.getAll().stream().map(
-                Author::toString).collect(Collectors.toList());
+    public List<Author> findAll() {
+        return authorRepository.getAll();
+
     }
 
     @Transactional(readOnly = true)
     @Override
     public String findById(long id) {
-        if (authorRepository.getById(id).isPresent()) {
-            var author = authorRepository.getById(id).get();
-            return "Автор  " + author;
-        } else return "Автора не существует.";
+        return authorRepository.getById(id)
+                .map(author -> "Автор  " + author)
+                .orElse("Автора не существует.");
     }
 
     @Transactional(readOnly = true)
     @Override
-    public String findByNameAndSurname(String name, String surname) {
-        var authors = authorRepository.getByNameAndSurname(name, surname).stream().map(
-                x -> "Автор  " + x.toString()).toList();
-        return authors.isEmpty() ? "Автора(ов) не существует." : authors.toString();
+    public List<Author> findByNameAndSurname(String name, String surname) {
+        var authors = authorRepository.getByNameAndSurname(name, surname);
+        return authors.isEmpty() ? Collections.emptyList() : authors;
     }
 
     @Transactional
     @Override
-    public String updateById(long id, String name, String surname) {
-        Author author = new Author(id, name, surname);
-        boolean result = authorRepository.updateById(id, name, surname);
-        return result ? "Автор обновился - " + author : "Ошибка";
+    public void updateById(long id, Author author) {
+        authorRepository.updateById(id, author);
+        // return result ? "Автор обновился - " + author : "Ошибка";
     }
 
     @Transactional
     @Override
     public String deleteById(long id) {
-        boolean result = authorRepository.deleteById(id);
-        return result ? "Автор с id " + id + " удален" : "Автора с данным id не существует";
+        Optional<Author> author = authorRepository.getById(id);
+        authorRepository.deleteById(id);
+        if (author.isPresent()) {
+            return "Автор с id " + id + " удален";
+        } else {
+            return "Автора с данным id не существует";
+        }
     }
 }

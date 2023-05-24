@@ -27,17 +27,15 @@ public class BookRepositoryJpa implements BookRepository {
     }
 
     @Override
-    public boolean updateById(long id, Book book) {
-        var query = em.createQuery(
-                "update Book b set b.name= :name, b.author= :author, b.genre= :genre where b.id= :id");
-        query.setParameter("id", id);
-        query.setParameter("name", book.getName());
-        query.setParameter("author", book.getAuthor());
-        query.setParameter("genre", book.getGenre());
-        int result = query.executeUpdate();
-        return result == 1;
+    public void updateById(long id, Book book) {
+        Book currentBook = getById(id).get();
+        em.detach(currentBook);
+        currentBook.setName(book.getName());
+        currentBook.setAuthor(book.getAuthor());
+        currentBook.setGenre(book.getGenre());
+        currentBook.setComments(book.getComments());
+        em.merge(currentBook);
     }
-
 
     @Override
     public Optional<Book> getById(long id) {
@@ -45,20 +43,18 @@ public class BookRepositoryJpa implements BookRepository {
     }
 
     @Override
-    public List<Book> getAll() {
-        EntityGraph<?> entityGraph = em.getEntityGraph("book-author-genre-entity-graph");
+    public List<Book> getAllWithAuthorAndGenre() {
+        EntityGraph<?> entityGraph = em.getEntityGraph("book-author-genre-graph");
 
         var resultList = em.createQuery(
-                "SELECT b FROM Book b join fetch comments", Book.class);
+                "SELECT b FROM Book b", Book.class);
         resultList.setHint("javax.persistence.fetchgraph", entityGraph);
         return resultList.getResultList();
     }
 
     @Override
-    public boolean deleteById(long id) {
-        var query = em.createQuery("delete from Book b where b.id= :id");
-        query.setParameter("id", id);
-        int result = query.executeUpdate();
-        return result == 1;
+    public void deleteById(long id) {
+        Book book = new Book(id);
+        em.remove(em.contains(book) ? book : em.merge(book));
     }
 }

@@ -8,7 +8,7 @@ public interface BookService {
 
     String save(String name, long authorId, long genreId);
 
-    List<String> findAll();
+    List<Book> findAll();
 
     String findById(long id);
 
