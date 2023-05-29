@@ -5,6 +5,7 @@ import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.otus.spring.entities.Author;
+import ru.otus.spring.exceptions.EntityNotFoundException;
 import ru.otus.spring.repositories.AuthorRepository;
 
 import java.util.List;
@@ -26,9 +27,9 @@ public class AuthorRepositoryJpa implements AuthorRepository {
     }
 
     @Override
-    public void updateById(long id, Author author) {
-        Author currentAuthor = getById(id).get();
-        em.detach(currentAuthor);
+    public void update(Author author) throws EntityNotFoundException {
+        long id = author.getId();
+        Author currentAuthor = getById(id).orElseThrow(() -> new EntityNotFoundException("Автора не существует"));
         currentAuthor.setName(author.getName());
         currentAuthor.setSurname(author.getSurname());
         em.merge(currentAuthor);
@@ -55,8 +56,8 @@ public class AuthorRepositoryJpa implements AuthorRepository {
     }
 
     @Override
-    public void deleteById(long id) {
-        Author author = new Author(id);
-        em.remove(em.contains(author) ? author : em.merge(author));
+    public void deleteById(long id) throws EntityNotFoundException {
+        Author author = getById(id).orElseThrow(() -> new EntityNotFoundException("Автора не существует"));
+        em.remove(author);
     }
 }

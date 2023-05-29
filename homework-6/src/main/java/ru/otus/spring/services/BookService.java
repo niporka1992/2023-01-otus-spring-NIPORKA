@@ -12,7 +12,7 @@ public interface BookService {
 
     String findById(long id);
 
-    String updateById(long id, Book book);
+    void updateById(long id, String name, long authorId, long genreId);
 
-    String deleteById(long id);
+    void deleteById(long id);
 }

@@ -4,21 +4,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
-import ru.otus.spring.entities.Author;
 import ru.otus.spring.entities.Book;
-import ru.otus.spring.entities.Genre;
-import ru.otus.spring.repositories.AuthorRepository;
-import ru.otus.spring.repositories.GenreRepository;
 import ru.otus.spring.services.BookService;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.lang.String.format;
 
 @ShellComponent
 @RequiredArgsConstructor
 public class ShellBookCommands {
     private final BookService bookService;
-    private final AuthorRepository authorRepository;
-    private final GenreRepository genreRepository;
 
     @ShellMethod(value = "Создать книгу ", key = {"add book", "create book", "ab", "cb"})
     public String addBook(
@@ -36,36 +33,30 @@ public class ShellBookCommands {
     }
 
     @ShellMethod(value = "Показать все книги ", key = {"get all books", "gab"})
-    public List<Book> getAllBooks() {
-        return bookService.findAll();
+    public String getAllBooks() {
+        List<Book> all = bookService.findAll();
+        return getBooksAsString(all);
     }
 
     @ShellMethod(value = "Удалить книгу по номеру", key = {"delete book", "db"})
-    public String deleteBook(@ShellOption(value = {"id"}) long id) {
+    public void deleteBook(@ShellOption(value = {"id"}) long id) {
         bookService.deleteById(id);
-        return "Книга с данным id удалена";
     }
 
     @ShellMethod(value = "Обновить информацию о книге по id", key = {"update book", "ub"})
-    public String updateBook(
+    public void updateBookById(
             @ShellOption(value = {"id"}) long id,
             @ShellOption(value = {"newName"}) String name,
             @ShellOption(value = {"authorId"}, help = "id автора") long authorId,
             @ShellOption(value = {"genreId"}, help = "id жанра") long genreId) {
-        Genre genre;
-        Author author;
-        var authorOptional = authorRepository.getById(authorId);
-        var genreOptional = genreRepository.getById(genreId);
 
-        if (authorOptional.isPresent()) {
-            author = authorOptional.get();
-        } else return "Автора не существует";
+        bookService.updateById(id, name, authorId, genreId);
+    }
 
-
-        if (genreOptional.isPresent()) {
-            genre = genreOptional.get();
-        } else return "Жанра не существует";
-
-        return bookService.updateById(id, new Book(name, author, genre));
+    private String getBooksAsString(List<Book> books) {
+        return format("Список книг:\n\t%s", books.stream()
+                .map(Book::toString)
+                .collect(Collectors.joining("\n\t"))
+        );
     }
 }

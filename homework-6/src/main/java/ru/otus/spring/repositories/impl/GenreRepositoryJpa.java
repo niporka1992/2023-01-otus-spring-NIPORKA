@@ -6,6 +6,7 @@ import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.otus.spring.entities.Genre;
+import ru.otus.spring.exceptions.EntityNotFoundException;
 import ru.otus.spring.repositories.GenreRepository;
 
 import java.util.List;
@@ -19,18 +20,17 @@ public class GenreRepositoryJpa implements GenreRepository {
     private final EntityManager em;
 
     @Override
-    public Optional<Genre> insert(Genre genre) {
+    public Genre insert(Genre genre) {
         if (genre.getId() == 0) {
             em.persist(genre);
-            return Optional.of(genre);
+            return genre;
         }
-        return Optional.of(em.merge(genre));
+        return em.merge(genre);
     }
 
     @Override
-    public void updateById(long id, String name) {
-        Genre genre = getById(id).get();
-        em.detach(genre);
+    public void updateById(long id, String name) throws EntityNotFoundException {
+        Genre genre = getById(id).orElseThrow(() -> new EntityNotFoundException("Такого жанра нет"));
         genre.setName(name);
         em.merge(genre);
     }
@@ -55,8 +55,8 @@ public class GenreRepositoryJpa implements GenreRepository {
     }
 
     @Override
-    public void deleteById(long id) {
-        Genre genre = new Genre(id);
-        em.remove(em.contains(genre) ? genre : em.merge(genre));
+    public void deleteById(long id) throws EntityNotFoundException {
+        Genre genre = getById(id).orElseThrow(() -> new EntityNotFoundException("Такого жанра нет"));
+        em.remove(genre);
     }
 }

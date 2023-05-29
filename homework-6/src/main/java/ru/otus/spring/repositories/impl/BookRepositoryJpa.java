@@ -6,6 +6,7 @@ import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.otus.spring.entities.Book;
+import ru.otus.spring.exceptions.EntityNotFoundException;
 import ru.otus.spring.repositories.BookRepository;
 
 import java.util.List;
@@ -27,13 +28,13 @@ public class BookRepositoryJpa implements BookRepository {
     }
 
     @Override
-    public void updateById(long id, Book book) {
-        Book currentBook = getById(id).get();
-        em.detach(currentBook);
+    public void update(Book book) throws EntityNotFoundException {
+        long id = book.getId();
+        Book currentBook = getById(id).orElseThrow(() -> new EntityNotFoundException("Книги не существует"));
+
         currentBook.setName(book.getName());
         currentBook.setAuthor(book.getAuthor());
         currentBook.setGenre(book.getGenre());
-        currentBook.setComments(book.getComments());
         em.merge(currentBook);
     }
 
@@ -53,8 +54,8 @@ public class BookRepositoryJpa implements BookRepository {
     }
 
     @Override
-    public void deleteById(long id) {
-        Book book = new Book(id);
-        em.remove(em.contains(book) ? book : em.merge(book));
+    public void deleteById(long id) throws EntityNotFoundException {
+        Book book = getById(id).orElseThrow(() -> new EntityNotFoundException("Книги не существует"));
+        em.remove(book);
     }
 }

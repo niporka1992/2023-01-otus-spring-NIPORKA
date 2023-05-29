@@ -1,6 +1,5 @@
 package ru.otus.spring.services.impl;
 
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,29 +9,24 @@ import ru.otus.spring.services.AuthorService;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class AuthorServiceImpl implements AuthorService {
-
     private final AuthorRepository authorRepository;
-    private final EntityManager entityManager;
 
     @Transactional
     @Override
     public String save(String name, String surname) {
         long id = authorRepository.insert(new Author(name, surname)).getId();
-        return id != 0 ? "Автор c номером " + id + " " + name + " " + surname + " создан" :
-                "что то пошло не так.";
+        return "Автор c номером " + id + " " + name + " " + surname + " создан";
     }
 
     @Transactional(readOnly = true)
     @Override
     public List<Author> findAll() {
         return authorRepository.getAll();
-
     }
 
     @Transactional(readOnly = true)
@@ -52,20 +46,14 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Transactional
     @Override
-    public void updateById(long id, Author author) {
-        authorRepository.updateById(id, author);
-        // return result ? "Автор обновился - " + author : "Ошибка";
+    public void updateById(long id, String name, String surname) {
+        var author = new Author(id, name, surname);
+        authorRepository.update(author);
     }
 
     @Transactional
     @Override
-    public String deleteById(long id) {
-        Optional<Author> author = authorRepository.getById(id);
+    public void deleteById(long id) {
         authorRepository.deleteById(id);
-        if (author.isPresent()) {
-            return "Автор с id " + id + " удален";
-        } else {
-            return "Автора с данным id не существует";
-        }
     }
 }

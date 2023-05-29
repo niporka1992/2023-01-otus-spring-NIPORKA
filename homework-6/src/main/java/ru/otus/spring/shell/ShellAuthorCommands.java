@@ -8,6 +8,9 @@ import ru.otus.spring.entities.Author;
 import ru.otus.spring.services.AuthorService;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.lang.String.format;
 
 @ShellComponent
 @RequiredArgsConstructor
@@ -24,7 +27,23 @@ public class ShellAuthorCommands {
     }
 
     @ShellMethod(value = "Показать всех авторов ", key = {"get all authors", "gaa"})
-    public List<Author> getAllAuthors() {
-        return authorService.findAll();
+    public String getAllAuthors() {
+        List<Author> all = authorService.findAll();
+        return getAuthorsAsString(all);
+    }
+
+    @ShellMethod(value = "Обновить автора по id", key = {"update author by id", "ua"})
+    public void updateAuthorById(
+            @ShellOption(value = {"id"}) long id,
+            @ShellOption(value = {"name"}) String name,
+            @ShellOption(value = {"surname"}) String surname) {
+        authorService.updateById(id, name, surname);
+    }
+
+    private String getAuthorsAsString(List<Author> authors) {
+        return format("Список авторов:\n\t%s", authors.stream()
+                .map(Author::toString)
+                .collect(Collectors.joining("\n\t"))
+        );
     }
 }

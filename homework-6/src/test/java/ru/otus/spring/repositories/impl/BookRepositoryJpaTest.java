@@ -44,7 +44,7 @@ class BookRepositoryJpaTest {
     @DisplayName("должен обновить книгу в библиотеке")
     void updateById() {
         Book expected = new Book(2, "Парфюмер", patrick, fantasy);
-        bookRepository.updateById(2, expected);
+        bookRepository.update(expected);
         var actual = em.find(Book.class, 2);
         assertThat(
                 String.valueOf(actual.getId()) +

@@ -13,7 +13,7 @@ public interface GenreService {
 
     List<Genre> findByName(String name);
 
-    String updateById(long id, String name);
+    void updateById(long id, String name);
 
-    String deleteById(long id);
+    void deleteById(long id);
 }

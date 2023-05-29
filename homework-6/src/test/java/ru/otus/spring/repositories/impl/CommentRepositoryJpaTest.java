@@ -12,7 +12,10 @@ import ru.otus.spring.entities.Book;
 import ru.otus.spring.entities.Comment;
 import ru.otus.spring.repositories.CommentRepository;
 
+import java.util.List;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @DisplayName("Тесты JPA для работы с комментариями")
@@ -39,7 +42,7 @@ class CommentRepositoryJpaTest {
     @DisplayName("должен обновить комментарий")
     void updateById() {
         Comment expected = new Comment(2, "text2", new Book(1));
-        commentRepository.updateById(1, "author2");
+        commentRepository.update(expected);
         val actual = em.find(Comment.class, 2);
         Assertions.assertThat(actual.getId()).isEqualTo(expected.getId());
         Assertions.assertThat(actual.getText()).isEqualTo(expected.getText());
@@ -60,5 +63,13 @@ class CommentRepositoryJpaTest {
         commentRepository.deleteById(1);
         val comment = em.find(Comment.class, 1);
         assertNull(comment);
+    }
+
+    @Test
+    @DisplayName("должен вернуть комментарии по ID книги")
+    void getCommentsByBookId() {
+        val actual = em.find(Book.class, 1).getComments();
+        List<Comment> expected = commentRepository.getCommentsByBookId(1);
+        assertEquals(expected, actual);
     }
 }

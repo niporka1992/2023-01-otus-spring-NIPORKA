@@ -8,6 +8,9 @@ import ru.otus.spring.entities.Genre;
 import ru.otus.spring.services.GenreService;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.lang.String.format;
 
 @ShellComponent
 @RequiredArgsConstructor
@@ -21,7 +24,15 @@ public class ShellGenreCommands {
     }
 
     @ShellMethod(value = "Показать все жанры ", key = {"get all genres", "gag"})
-    public List<Genre> getAllGenres() {
-        return genreService.findAll();
+    public String getAllGenres() {
+        List<Genre> all = genreService.findAll();
+        return getGenresAsString(all);
+    }
+
+    private String getGenresAsString(List<Genre> genres) {
+        return format("Список книг:\n\t%s", genres.stream()
+                .map(Genre::toString)
+                .collect(Collectors.joining("\n\t"))
+        );
     }
 }

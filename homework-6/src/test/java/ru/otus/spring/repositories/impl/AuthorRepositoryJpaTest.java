@@ -39,7 +39,7 @@ class AuthorRepositoryJpaTest {
     @DisplayName("должен обновить автора в библиотеке")
     void updateById() {
         Author expected = new Author(2, "author", "author");
-        authorRepository.updateById(2, expected);
+        authorRepository.update(expected);
         val actual = em.find(Author.class, 2);
         Assertions.assertEquals(expected, actual);
     }

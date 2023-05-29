@@ -4,7 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
+import ru.otus.spring.entities.Comment;
 import ru.otus.spring.services.CommentService;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static java.lang.String.format;
 
 @ShellComponent
 @RequiredArgsConstructor
@@ -24,7 +30,23 @@ public class ShellCommentCommands {
     }
 
     @ShellMethod(value = "Удалить комментарий по id ", key = {"delete comments by id", "dcid"})
-    public String deleteCommentById(@ShellOption(value = {"id"}) long id) {
-        return commentService.deleteById(id);
+    public void deleteCommentById(@ShellOption(value = {"id"}) long id) {
+        commentService.deleteById(id);
+    }
+
+    @ShellMethod(value = "Показать комментарий по id книги ", key = {"get comments by book id", "gcbid"})
+    public String getCommentByBookId(@ShellOption(value = {"id"}) long bookId) {
+        var listComments = commentService.findByBookId(bookId);
+        return getCommentsAsString(listComments);
+    }
+
+    private String getCommentsAsString(List<Comment> comments) {
+        if (comments.isEmpty()) {
+            return "";
+        }
+        return format("Список комментариев книги:\n\t%s", comments.stream()
+                .map(Comment::toString)
+                .collect(Collectors.joining("\n\t"))
+        );
     }
 }

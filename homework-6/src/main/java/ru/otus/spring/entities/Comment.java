@@ -6,7 +6,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "comments")
-
+@NamedEntityGraph(name = "book-graph", attributeNodes = {
+        @NamedAttributeNode("book"),})
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +29,12 @@ public class Comment {
         this.text = text;
         this.book = book;
     }
+
+    public Comment(long id, String text) {
+        this.id = id;
+        this.text = text;
+    }
+
 
     public Comment(long id) {
         this.id = id;

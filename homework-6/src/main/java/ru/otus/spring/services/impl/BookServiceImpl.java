@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.otus.spring.entities.Author;
 import ru.otus.spring.entities.Book;
 import ru.otus.spring.entities.Genre;
+import ru.otus.spring.exceptions.EntityNotFoundException;
 import ru.otus.spring.repositories.AuthorRepository;
 import ru.otus.spring.repositories.BookRepository;
 import ru.otus.spring.repositories.GenreRepository;
@@ -16,7 +17,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
-
     private final BookRepository bookRepository;
     private final AuthorRepository authorRepository;
     private final GenreRepository genreRepository;
@@ -24,11 +24,10 @@ public class BookServiceImpl implements BookService {
     @Transactional
     @Override
     public String save(String name, long authorId, long genreId) {
-        Author author = authorRepository.getById(authorId).orElse(null);
-        Genre genre = genreRepository.getById(genreId).orElse(null);
-        if (author == null || genre == null) {
-            return "Таких ID не существует";
-        }
+        Author author = authorRepository.getById(authorId)
+                .orElseThrow(() -> new EntityNotFoundException("Автора с таким ID не существует."));
+        Genre genre = genreRepository.getById(genreId)
+                .orElseThrow(() -> new EntityNotFoundException("Жанра с таким ID не существует."));
         Book book = bookRepository.insert(new Book(name, author, genre));
         return "Книга c номером " + book.getId() + " " + name + " " + " создана";
     }
@@ -36,9 +35,7 @@ public class BookServiceImpl implements BookService {
     @Transactional(readOnly = true)
     @Override
     public List<Book> findAll() {
-        List<Book> bookList = bookRepository.getAllWithAuthorAndGenre();
-        bookList.forEach(Book::getComments);
-        return bookList;
+        return bookRepository.getAllWithAuthorAndGenre();
     }
 
     @Transactional(readOnly = true)
@@ -52,20 +49,18 @@ public class BookServiceImpl implements BookService {
 
     @Transactional
     @Override
-    public String updateById(long id, Book book) {
-        if (bookRepository.getById(id).isPresent()) {
-            bookRepository.updateById(id, book);
-            return "Книга обновлена.";
-        }
-        return "Такой книги нет";
+    public void updateById(long id, String name, long authorId, long genreId) throws EntityNotFoundException {
+        var author = authorRepository.getById(authorId)
+                .orElseThrow(() -> new EntityNotFoundException("Такого автора не существует"));
+        var genre = genreRepository.getById(genreId)
+                .orElseThrow(() -> new EntityNotFoundException("Такого жанра не существует"));
+        var book = new Book(id, name, author, genre);
+        bookRepository.update(book);
     }
 
     @Transactional
     @Override
-    public String deleteById(long id) {
-        if (bookRepository.getById(id).isPresent()) {
-            bookRepository.deleteById(id);
-            return "Книга удалена";
-        } else return "Такой книги нет";
+    public void deleteById(long id) {
+        bookRepository.deleteById(id);
     }
 }

@@ -1,12 +1,15 @@
 package ru.otus.spring.repositories.impl;
 
+import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.otus.spring.entities.Comment;
+import ru.otus.spring.exceptions.EntityNotFoundException;
 import ru.otus.spring.repositories.CommentRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -25,11 +28,11 @@ public class CommentRepositoryJpa implements CommentRepository {
     }
 
     @Override
-    public void updateById(long id, String text) {
-        Comment comment = getById(id).get();
-        em.detach(comment);
-        comment.setText(text);
-        em.merge(comment);
+    public void update(Comment comment) throws EntityNotFoundException {
+        long id = comment.getId();
+        Comment currentComment = getById(id).orElseThrow(() -> new EntityNotFoundException("Комментария не существует"));
+        currentComment.setText(comment.getText());
+        em.merge(currentComment);
     }
 
     @Override
@@ -38,8 +41,19 @@ public class CommentRepositoryJpa implements CommentRepository {
     }
 
     @Override
-    public void deleteById(long id) {
-        Comment comment = new Comment(id);
-        em.remove(em.contains(comment) ? comment : em.merge(comment));
+    public void deleteById(long id) throws EntityNotFoundException {
+        Comment comment = getById(id).orElseThrow(() -> new EntityNotFoundException("Комментария не существует"));
+        em.remove(comment);
+    }
+
+    @Override
+    public List<Comment> getCommentsByBookId(long bookId) {
+        EntityGraph<?> entityGraph = em.getEntityGraph("book-graph");
+
+        var resultList = em.createQuery(
+                "SELECT c FROM Comment c where c.book.id = :bookId", Comment.class);
+        resultList.setParameter("bookId", bookId);
+        resultList.setHint("javax.persistence.fetchgraph", entityGraph);
+        return resultList.getResultList();
     }
 }

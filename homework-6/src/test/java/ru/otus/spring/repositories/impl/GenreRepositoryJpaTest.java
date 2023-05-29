@@ -58,9 +58,9 @@ class GenreRepositoryJpaTest {
     @Test
     @DisplayName("должен достать жанр из библиотеки по имени")
     void getByName() {
-        val listActualGenre = genreRepository.getByName("Роман");
+        val actualGenre = genreRepository.getByName("Роман").get(0);
         val expectedGenre = em.find(Genre.class, 2);
-        org.assertj.core.api.Assertions.assertThat(listActualGenre.get(0))
+        org.assertj.core.api.Assertions.assertThat(actualGenre)
                 .usingRecursiveComparison().isEqualTo(expectedGenre);
     }
 

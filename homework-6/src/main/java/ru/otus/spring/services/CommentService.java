@@ -1,11 +1,17 @@
 package ru.otus.spring.services;
 
+import ru.otus.spring.entities.Comment;
+
+import java.util.List;
+
 public interface CommentService {
     String save(String text, long booId);
 
     String findById(long id);
 
-    String updateById(long id, String text);
+    void updateById(long id, String text);
 
-    String deleteById(long id);
+    void deleteById(long id);
+
+    List<Comment> findByBookId(long bookId);
 }

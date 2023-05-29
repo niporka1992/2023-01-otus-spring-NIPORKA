@@ -22,9 +22,11 @@ public class GenreServiceImpl implements GenreService {
     public String save(String name) {
         Genre genre = new Genre(name);
         if (genreRepository.getByName(name).isEmpty()) {
-            genreRepository.insert(genre).get();
+            genreRepository.insert(genre);
             return "Жанр " + genre.getName() + " добавлен";
-        } else return "Такой жанр имеется.";
+        } else {
+            return "Такой жанр имеется.";
+        }
     }
 
     @Transactional(readOnly = true)
@@ -52,21 +54,13 @@ public class GenreServiceImpl implements GenreService {
 
     @Transactional
     @Override
-    public String updateById(long id, String name) {
-        if (genreRepository.getById(id).isPresent()) {
-            genreRepository.updateById(id, name);
-            return "Жанр обновлен.";
-        }
-        return "Такого жанра нет";
+    public void updateById(long id, String name) {
+        genreRepository.updateById(id, name);
     }
 
     @Transactional
     @Override
-    public String deleteById(long id) {
-        if (genreRepository.getById(id).isPresent()) {
-            genreRepository.deleteById(id);
-            return "Жанр удален.";
-        }
-        return "Такого жанра нет";
+    public void deleteById(long id) {
+        genreRepository.deleteById(id);
     }
 }
