@@ -12,7 +12,6 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class AuthorServiceImpl implements AuthorService {
     private final AuthorRepository authorRepository;
 
