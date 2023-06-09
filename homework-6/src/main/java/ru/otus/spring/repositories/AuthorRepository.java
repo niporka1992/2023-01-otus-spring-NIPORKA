@@ -8,9 +8,7 @@ import java.util.Optional;
 
 public interface AuthorRepository {
 
-    Author insert(Author author);
-
-    void update(Author author) throws EntityNotFoundException;
+    Author insertOrUpdate(Author author);
 
     Optional<Author> getById(long id);
 

@@ -28,7 +28,7 @@ class AuthorRepositoryJpaTest {
     @DisplayName("должен положить автора в библиотеку")
     void insert() {
         Author expected = new Author("author", "author");
-        authorRepository.insert(expected);
+        authorRepository.insertOrUpdate(expected);
         val actual = em.find(Author.class, 4);
         assertThat(actual)
                 .usingRecursiveComparison()
@@ -39,7 +39,7 @@ class AuthorRepositoryJpaTest {
     @DisplayName("должен обновить автора в библиотеке")
     void updateById() {
         Author expected = new Author(2, "author", "author");
-        authorRepository.update(expected);
+        authorRepository.insertOrUpdate(expected);
         val actual = em.find(Author.class, 2);
         Assertions.assertEquals(expected, actual);
     }

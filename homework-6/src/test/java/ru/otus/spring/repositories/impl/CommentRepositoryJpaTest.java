@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 @DisplayName("Тесты JPA для работы с комментариями")
-@Import(CommentRepositoryJpa.class)
+@Import({CommentRepositoryJpa.class, BookRepositoryJpa.class})
 @DataJpaTest
 class CommentRepositoryJpaTest {
 

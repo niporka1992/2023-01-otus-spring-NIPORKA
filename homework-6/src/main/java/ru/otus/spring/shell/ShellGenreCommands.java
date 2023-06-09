@@ -20,7 +20,7 @@ public class ShellGenreCommands {
     @ShellMethod(value = "Создать жанр ", key = {"add genre", "ag"})
     public String addGenre(@ShellOption(value = {"name"}) String name) {
 
-        return "Жанр создан - " + genreService.save(name);
+        return genreService.save(name);
     }
 
     @ShellMethod(value = "Показать все жанры ", key = {"get all genres", "gag"})
@@ -30,7 +30,7 @@ public class ShellGenreCommands {
     }
 
     private String getGenresAsString(List<Genre> genres) {
-        return format("Список книг:\n\t%s", genres.stream()
+        return format("Список жанров:\n\t%s", genres.stream()
                 .map(Genre::toString)
                 .collect(Collectors.joining("\n\t"))
         );

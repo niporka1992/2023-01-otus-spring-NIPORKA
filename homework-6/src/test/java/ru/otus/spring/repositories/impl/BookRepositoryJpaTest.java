@@ -10,7 +10,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import ru.otus.spring.entities.Author;
 import ru.otus.spring.entities.Book;
-import ru.otus.spring.entities.Comment;
 import ru.otus.spring.entities.Genre;
 import ru.otus.spring.repositories.BookRepository;
 
@@ -25,7 +24,6 @@ class BookRepositoryJpaTest {
     private BookRepository bookRepository;
     @Autowired
     private TestEntityManager em;
-    private final Comment comment3 = new Comment(3, "text3", new Book(2));
     private final Author patrick = new Author(3, "Патрик", "Зюскинд");
     private final Genre fantasy = new Genre(1, "Фэнтези");
 

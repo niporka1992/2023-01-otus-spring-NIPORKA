@@ -34,7 +34,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public String findById(long id) {
         return commentRepository.getById(id)
-                .map(comment -> "Комментарий - " + comment)
+                .map(Comment::toString)
                 .orElse("Такого комментария нет");
     }
 

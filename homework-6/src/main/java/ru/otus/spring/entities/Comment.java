@@ -35,11 +35,6 @@ public class Comment {
         this.text = text;
     }
 
-
-    public Comment(long id) {
-        this.id = id;
-    }
-
     public long getId() {
         return id;
     }
@@ -61,8 +56,6 @@ public class Comment {
         return "Comment{" +
                 "id=" + id +
                 ", text='" + text + '\'' +
-                ", bookId=" + book.getId() +
-                ", bookName=" + book.getName() +
                 '}';
     }
 }

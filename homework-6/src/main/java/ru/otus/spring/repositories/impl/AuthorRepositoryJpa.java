@@ -18,22 +18,18 @@ public class AuthorRepositoryJpa implements AuthorRepository {
     private final EntityManager em;
 
     @Override
-    public Author insert(Author author) {
+    public Author insertOrUpdate(Author author) {
         if (author.getId() == 0) {
             em.persist(author);
             return author;
         }
-        return em.merge(author);
-    }
-
-    @Override
-    public void update(Author author) throws EntityNotFoundException {
         long id = author.getId();
         Author currentAuthor = getById(id).orElseThrow(() -> new EntityNotFoundException("Автора не существует"));
         currentAuthor.setName(author.getName());
         currentAuthor.setSurname(author.getSurname());
-        em.merge(currentAuthor);
+        return em.merge(currentAuthor);
     }
+
 
     @Override
     public Optional<Author> getById(long id) {

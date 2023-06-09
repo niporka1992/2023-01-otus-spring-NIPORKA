@@ -55,8 +55,15 @@ public class ShellBookCommands {
 
     private String getBooksAsString(List<Book> books) {
         return format("Список книг:\n\t%s", books.stream()
-                .map(Book::toString)
+                .map(this::converter)
                 .collect(Collectors.joining("\n\t"))
         );
+    }
+
+    private String converter(Book book) {
+        return "Id - " + book.getId() +
+                " Имя книги - " + book.getName() +
+                " Id автора - " + book.getAuthor().getId() +
+                " Id жанра - " + book.getGenre().getId();
     }
 }

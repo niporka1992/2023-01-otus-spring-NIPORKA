@@ -42,7 +42,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public String findById(long id) {
         return bookRepository.getById(id)
-                .map(book -> "Книга" + book)
+                .map(Book::toString)
                 .orElse("Такой книги нет");
     }
 

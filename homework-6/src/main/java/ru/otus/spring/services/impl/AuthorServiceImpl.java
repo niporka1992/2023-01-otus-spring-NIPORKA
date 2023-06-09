@@ -19,7 +19,7 @@ public class AuthorServiceImpl implements AuthorService {
     @Transactional
     @Override
     public String save(String name, String surname) {
-        long id = authorRepository.insert(new Author(name, surname)).getId();
+        long id = authorRepository.insertOrUpdate(new Author(name, surname)).getId();
         return "Автор c номером " + id + " " + name + " " + surname + " создан";
     }
 
@@ -33,7 +33,7 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public String findById(long id) {
         return authorRepository.getById(id)
-                .map(author -> "Автор  " + author)
+                .map(Author::toString)
                 .orElse("Автора не существует.");
     }
 
@@ -48,7 +48,7 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public void updateById(long id, String name, String surname) {
         var author = new Author(id, name, surname);
-        authorRepository.update(author);
+        authorRepository.insertOrUpdate(author);
     }
 
     @Transactional
