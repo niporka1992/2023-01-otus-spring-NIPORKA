@@ -21,7 +21,7 @@ public class ShellAuthorCommands {
     public void addAuthor(
             @ShellOption(value = {"name"}) String name,
             @ShellOption(value = {"surname"}) String surname) {
-         authorService.save(name, surname);
+        authorService.save(name, surname);
     }
 
     @ShellMethod(value = "Показать всех авторов ", key = {"get all authors", "gaa"})

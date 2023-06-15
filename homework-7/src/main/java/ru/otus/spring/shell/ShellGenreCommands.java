@@ -19,7 +19,7 @@ public class ShellGenreCommands {
 
     @ShellMethod(value = "Создать жанр ", key = {"add genre", "ag"})
     public void addGenre(@ShellOption(value = {"name"}) String name) {
-         genreService.save(name);
+        genreService.save(name);
     }
 
     @ShellMethod(value = "Показать все жанры ", key = {"get all genres", "gag"})
