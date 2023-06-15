@@ -1,0 +1,28 @@
+spring:
+  h2:
+    console:
+      path: /h2-console
+      settings:
+        web-allow-others: true
+  shell:
+    interactive:
+      enabled: true
+  datasource:
+    url: jdbc:h2:mem:library
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data.sql
+      schema-locations: classpath:schema.sql
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: false
+
+logging:
+  level:
+    ROOT: ERROR
