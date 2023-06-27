@@ -3,7 +3,7 @@ package ru.otus.spring.services.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.otus.spring.entities.Author;
-import ru.otus.spring.entities.Book;
+import ru.otus.spring.exceptions.EntityNotFoundException;
 import ru.otus.spring.repositories.AuthorRepository;
 import ru.otus.spring.repositories.BookRepository;
 import ru.otus.spring.services.AuthorService;
@@ -53,15 +53,16 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public String deleteById(String id) {
-        var author = authorRepository.findById(id);
-        if (author.isPresent()) {
-            List<Book> bookList = bookRepository.findBookByAuthor(author.get());
-            if (bookList.size() != 0) {
-                return "Автор с id= " + id + " " + author.get().getName() + author.get().getSurname() + " существует в "
-                        + bookList.size() + " книгах!";
-            }
+        var author = authorRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Автора не существует."));
+        var count = bookRepository.countBookByAuthor(author);
+        if (count > 0) {
+            return "Автор с id= " + id + " " + author.getName() + " " + author.getSurname() + " существует в "
+                    + count + " книге(ах)!";
+        } else {
+            authorRepository.deleteById(id);
+            return "Автор удален.";
         }
-        authorRepository.deleteById(id);
-        return "Автор удален.";
     }
 }
+

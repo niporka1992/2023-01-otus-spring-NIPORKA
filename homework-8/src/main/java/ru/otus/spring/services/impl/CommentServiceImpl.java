@@ -2,7 +2,6 @@ package ru.otus.spring.services.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.otus.spring.entities.Book;
 import ru.otus.spring.entities.Comment;
 import ru.otus.spring.repositories.BookRepository;
 import ru.otus.spring.repositories.CommentRepository;
@@ -18,11 +17,12 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public String save(String text, String bookId) {
-        return bookRepository.findById(bookId).map(x -> {
-            Book book = new Book(bookId);
-            commentRepository.save(new Comment(text, book));
-            return "Комментарий добавлен.";
-        }).orElse("Книги с таким ID нет");
+        if (bookRepository.existsById(bookId)) {
+            commentRepository.save(new Comment(text, bookId));
+            return "Комментарий добавлен";
+        } else {
+            return "Такой книги не существует";
+        }
     }
 
 

@@ -2,7 +2,6 @@ package ru.otus.spring.services.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.otus.spring.entities.Book;
 import ru.otus.spring.entities.Genre;
 import ru.otus.spring.exceptions.EntityNotFoundException;
 import ru.otus.spring.repositories.BookRepository;
@@ -47,16 +46,15 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public String deleteById(String id) {
-        var genre = genreRepository.findById(id);
-        if (genre.isPresent()) {
-            List<Book> bookList = bookRepository.findBookByGenre(genre.get());
-            if (bookList.size() != 0) {
-                return "Жанр с id= " + id + " " + genre.get().getName() + " существует в "
-                        + bookList.size() + " книгах!";
-            }
+        var genre = genreRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Жанра не существует."));
+        var count = bookRepository.countBookByGenre(genre);
+        if (count > 0) {
+            return "Жанр с id= " + id + " " + genre.getName() + " существует в "
+                    + count + " книге(ах)!";
+        } else {
+            genreRepository.deleteById(id);
+            return "Жанр удален.";
         }
-        genreRepository.deleteById(id);
-
-        return "Жанр удален.";
     }
 }
