@@ -13,6 +13,7 @@ import ru.otus.spring.dto.BookDto;
 import ru.otus.spring.entities.Author;
 import ru.otus.spring.entities.Book;
 import ru.otus.spring.entities.Genre;
+import ru.otus.spring.exceptions.EntityNotFoundException;
 import ru.otus.spring.services.AuthorService;
 import ru.otus.spring.services.BookService;
 import ru.otus.spring.services.GenreService;
@@ -38,7 +39,8 @@ public class BookController {
     @GetMapping("/edit")
     public String editBook(@RequestParam("id") String id, Model model) {
 
-        Book book = bookService.findById(id).get();
+        Book book = bookService.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Книги с таким ID нет"));
         addAttributes(model, book);
         return "edit";
     }
@@ -50,7 +52,7 @@ public class BookController {
             addAttributes(model);
             return "edit";
         }
-        addAttributes(model);
+
 
         if (bookDto.id().equals(" ")) {
             bookService.save(bookDto.toDomainObject());
@@ -72,7 +74,7 @@ public class BookController {
     }
 
 
-    @GetMapping("/delete")
+    @PostMapping("/delete")
     public String deleteBook(@RequestParam("id") String id) {
         bookService.deleteById(id);
         return "redirect:/";

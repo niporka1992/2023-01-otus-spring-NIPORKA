@@ -4,8 +4,6 @@ spring:
       host: localhost
       port: 27017
       database: library
-
-logging:
   level:
     ROOT: debug
 

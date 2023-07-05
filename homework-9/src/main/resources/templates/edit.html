@@ -43,9 +43,8 @@
     <div class="row">
         <label for="author">Authors:</label>
         <select id="author" name="author" th:value="${book.author}">
-            <option th:each=" optionAuthor : ${authors}" th:value="${optionAuthor.id}"
-                    th:text="${optionAuthor.name}" )
-            >Author
+            <option value selected th:each=" optionAuthor : ${authors}" th:value="${optionAuthor.id}"
+                    th:text="${optionAuthor.name}">Author
             </option>
         </select>
     </div>

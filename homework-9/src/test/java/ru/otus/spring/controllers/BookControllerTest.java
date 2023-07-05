@@ -20,8 +20,7 @@ import java.util.Optional;
 
 import static org.hamcrest.Matchers.stringContainsInOrder;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureDataMongo
@@ -100,7 +99,7 @@ class BookControllerTest {
     @DisplayName("должен удалить книгу и вернуть на гл страницу")
     @Test
     void testDeleteBook() throws Exception {
-        mvc.perform(get("/delete?id=1"))
+        mvc.perform(post("/delete?id=1"))
                 .andExpect(status().is3xxRedirection());
     }
 }
