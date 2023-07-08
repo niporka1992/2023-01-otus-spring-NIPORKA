@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Список книг</title>
+    <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<script src="books.js"></script>
+<button id="my-button" onclick="getBookDataByFetch()">Получить данные о книге</button>
+<label for="name">Name:</label>
+<input type="text" id="name" name="name" required maxlength="30" size="15" minlength="2">
+<br/><br/>
+<pre id="dataContainer"></pre>
+
+<button onclick="loadBooks()">Загрузить книги</button>
+<table id="booksTable"></table>
+
+</body>
+</html>
