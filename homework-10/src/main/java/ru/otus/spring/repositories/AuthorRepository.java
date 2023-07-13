@@ -6,7 +6,7 @@ import ru.otus.spring.entities.Author;
 import java.util.Optional;
 
 public interface AuthorRepository extends MongoRepository<Author, String> {
-    Optional<Author> findByName(String name);
+ //   Optional<Author> findByName(String name);
 }
 
 

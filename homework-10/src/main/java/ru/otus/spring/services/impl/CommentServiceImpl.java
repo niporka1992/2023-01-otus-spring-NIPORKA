@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
-    private final CommentRepository commentRepository;
+/*    private final CommentRepository commentRepository;
     private final BookRepository bookRepository;
 
     @Override
@@ -48,5 +48,5 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public List<Comment> findByBookId(String bookId) {
         return commentRepository.findByBookId(bookId);
-    }
+    }*/
 }

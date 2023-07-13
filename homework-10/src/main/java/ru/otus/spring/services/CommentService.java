@@ -5,7 +5,7 @@ import ru.otus.spring.entities.Comment;
 import java.util.List;
 
 public interface CommentService {
-    String save(String text, String booId);
+/*    String save(String text, String booId);
 
     String findById(String id);
 
@@ -13,5 +13,5 @@ public interface CommentService {
 
     void deleteById(String id);
 
-    List<Comment> findByBookId(String bookId);
+    List<Comment> findByBookId(String bookId);*/
 }

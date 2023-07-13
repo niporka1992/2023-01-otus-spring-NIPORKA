@@ -14,9 +14,10 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class AuthorServiceImpl implements AuthorService {
-    private final AuthorRepository authorRepository;
-    private final BookRepository bookRepository;
+ /*   private final AuthorRepository authorRepository;
+    private final BookRepository bookRepository;*/
 
+/*
     @Override
     public void save(Author author) {
         authorRepository.save(author);
@@ -34,8 +35,10 @@ public class AuthorServiceImpl implements AuthorService {
         return authorRepository.findByName(name);
     }
 
+*/
 
-    @Override
+
+/*    @Override
     public void updateById(String id, String name, String surname) {
         var author = new Author(id, name, surname);
         authorRepository.save(author);
@@ -54,6 +57,6 @@ public class AuthorServiceImpl implements AuthorService {
             authorRepository.deleteById(id);
             return "Автор удален.";
         }
-    }
+    }*/
 }
 

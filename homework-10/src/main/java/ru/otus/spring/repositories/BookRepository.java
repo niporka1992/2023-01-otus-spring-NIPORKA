@@ -8,9 +8,9 @@ import ru.otus.spring.entities.Genre;
 import java.util.List;
 
 public interface BookRepository extends MongoRepository<Book, String> {
-    Long countBookByAuthor(Author author);
+  //  Long countBookByAuthor(Author author);
 
-    Long countBookByGenre(Genre genre);
+  //  Long countBookByGenre(Genre genre);
 
     List<Book> findBookByName(String name);
 }

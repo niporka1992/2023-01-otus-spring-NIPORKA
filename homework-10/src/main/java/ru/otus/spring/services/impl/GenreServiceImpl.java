@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GenreServiceImpl implements GenreService {
 
-    private final GenreRepository genreRepository;
+/*    private final GenreRepository genreRepository;
     private final BookRepository bookRepository;
 
     @Override
@@ -54,5 +54,5 @@ public class GenreServiceImpl implements GenreService {
             genreRepository.deleteById(id);
             return "Жанр удален.";
         }
-    }
+    }*/
 }

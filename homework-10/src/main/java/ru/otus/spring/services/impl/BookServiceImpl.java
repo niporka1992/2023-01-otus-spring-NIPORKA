@@ -8,17 +8,11 @@ import ru.otus.spring.repositories.BookRepository;
 import ru.otus.spring.services.BookService;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
-
-    @Override
-    public void save(Book b) {
-        bookRepository.save(b);
-    }
 
 
     @Override
@@ -27,18 +21,23 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Optional<Book> findById(String id) {
-        return bookRepository.findById(id);
-    }
-
-    @Override
     public List<BookDto> findByName(String name) {
         return bookRepository.findBookByName(name).stream().map(BookDto::toBookDto).toList();
     }
 
+  /*  @Override
+    public void save(Book b) {
+        bookRepository.save(b);
+    }
 
     @Override
     public void deleteById(String id) {
         bookRepository.deleteById(String.valueOf(id));
     }
+
+    @Override
+    public Optional<Book> findById(String id) {
+        return bookRepository.findById(id);
+    }
+*/
 }

@@ -5,7 +5,7 @@ import ru.otus.spring.entities.Genre;
 import java.util.List;
 
 public interface GenreService {
-    void save(String name);
+/*    void save(String name);
 
     List<Genre> findAll();
 
@@ -15,5 +15,5 @@ public interface GenreService {
 
     void updateById(String id, String name);
 
-    String deleteById(String id);
+    String deleteById(String id);*/
 }

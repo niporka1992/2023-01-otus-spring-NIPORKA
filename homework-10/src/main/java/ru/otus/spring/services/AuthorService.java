@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface AuthorService {
 
-    void save(Author author);
+/*    void save(Author author);
 
     List<Author> findAll();
 
@@ -15,5 +15,5 @@ public interface AuthorService {
 
     void updateById(String id, String name, String surname);
 
-    String deleteById(String id);
+    String deleteById(String id);*/
 }

@@ -8,13 +8,13 @@ import java.util.Optional;
 
 public interface BookService {
 
-    void save(Book book);
+ //   void save(Book book);
 
     List<Book> findAll();
 
-    Optional<Book> findById(String id);
+  //  Optional<Book> findById(String id);
 
     List<BookDto> findByName(String name);
 
-    void deleteById(String id);
+   // void deleteById(String id);
 }

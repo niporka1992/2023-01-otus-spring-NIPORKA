@@ -9,7 +9,7 @@ function getBookDataByFetch() {
 
     if (textField.value !== '') {
         const bookName = textField.value;
-        fetch('http://localhost:8080/api/v1/book/' + bookName)
+        fetch('/api/v1/book/name/?name=' + bookName)
             .then(response => response.json())
             .then(json => outputCharacter(json))
             .catch(error => console.error('Ошибка:', error));
