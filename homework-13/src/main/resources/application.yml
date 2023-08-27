@@ -1,0 +1,19 @@
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: library
+  level:
+    ROOT: info
+
+mongock:
+  change-logs-scan-package:
+    - ru.otus.spring.mongock.changelog
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local
+logging:
+  level:
+    org.springframework.security: debug
