@@ -2,6 +2,8 @@ package ru.otus.spring.controllers;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,6 +21,7 @@ import ru.otus.spring.services.BookService;
 import ru.otus.spring.services.GenreService;
 
 import javax.validation.Valid;
+import java.util.Collection;
 import java.util.List;
 
 @Controller
@@ -31,9 +34,11 @@ public class BookController {
 
 
     @GetMapping("/")
-    public String listPage(Model model) {
+    public String listPage(Model model, Authentication authentication) {
+        String currentUserRole = getUserRole(authentication);
         List<Book> bookList = bookService.findAll();
         model.addAttribute("books", bookList);
+        model.addAttribute("currentUserRole", currentUserRole);
         return "list";
     }
 
@@ -100,5 +105,15 @@ public class BookController {
         List<Author> authors = authorService.findAll();
         model.addAttribute("authors", authors);
 
+    }
+
+    private String getUserRole(Authentication authentication) {
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        if (authorities.stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"))) {
+            return "ROLE_ADMIN";
+        } else if (authorities.stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_USER"))) {
+            return "ROLE_USER";
+        }
+        return "ROLE_GUEST";
     }
 }

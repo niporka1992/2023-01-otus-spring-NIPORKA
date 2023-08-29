@@ -27,46 +27,55 @@
 </head>
 <body>
 
-    <h3>Books:</h3>
-    <a href="edit.html" th:href="@{/create} ">
-        <img src="add-book.png" width="2%" height="2%" id="dagger"/></a>
+<h3>Books:</h3>
+<a th:if="${currentUserRole != 'ROLE_USER'}" href="edit.html" th:href="@{/create}">
+    <img src="add-book.png" width="2%" height="2%" id="dagger"/>
+</a>
 
 
-    <table border="2" class="books">
-        <thead>
-        <tr>
-            <th bgcolor="red">ID</th>
-            <th bgcolor="red">Name</th>
-            <th bgcolor="red">Author</th>
-            <th bgcolor="red">Genre</th>
-            <th bgcolor="red">Action</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="book : ${books}">
-            <td th:text="${book.id}"></td>
-            <td th:text="${book.name}"></td>
-            <td th:text="${book.author?.name}"></td>
-            <td th:text="${book.genre?.name}"></td>
-            <td>
-                <button type="submit"><a href="edit.html" th:href="@{/edit(id=${book.getId()})}">
+<table border="2" class="books">
+    <thead>
+    <tr>
+        <th bgcolor="red">ID</th>
+        <th bgcolor="red">Name</th>
+        <th bgcolor="red">Author</th>
+        <th bgcolor="red">Genre</th>
+        <th bgcolor="red">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${books}">
+        <td th:text="${book.id}"></td>
+        <td th:text="${book.name}"></td>
+        <td th:text="${book.author?.name}"></td>
+        <td th:text="${book.genre?.name}"></td>
+        <td>
+
+            <button type="submit" th:if="${currentUserRole != 'ROLE_USER'}">
+                <a href="edit.html" th:href="@{/edit(id=${book.getId()})}">
                     <img src="modify-book.png" width="32" height="32"/>
-                </button>
+                </a>
+            </button>
 
+            <form id="edit-form" th:if="${currentUserRole != 'ROLE_USER'}" action="list.html" th:method="post"
+                  th:action="@{/delete(id=${book.id})}" th:object="${book}">
+                <div class="row">
+                    <button type="submit">
+                        <img src="delete-book.jpg" width="32" height="32" alt=""/>
+                    </button>
+                </div>
+            </form>
 
-                <form id="edit-form" action="list.html" th:method="post" th:action="@{/delete(id=${book.id})}"
-                      th:object="${book}">
-                    <div class="row">
-                        <button type="submit"><img src="delete-book.jpg" width="32" height="32" alt=""/></button>
-                    </div>
-                </form>
+        </td>
 
+    </tr>
 
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <form th:action="@{/logout}" method="post" class="logout-form">
-        <button type="submit">Logout</button>
+    </tbody>
+</table>
+
+<form th:action="@{/logout}" method="post" class="logout-form">
+    <button type="submit">Logout</button>
+</form>
 </body>
+
 </html>
