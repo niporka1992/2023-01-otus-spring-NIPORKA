@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "comments")
-@NamedEntityGraph(name = "book-graph", attributeNodes = {
-        @NamedAttributeNode("book"),})
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    private String mId;
 
     @Column(name = "text")
     private String text;
@@ -27,6 +27,12 @@ public class Comment {
 
     public Comment(long id, String text, Book book) {
         this.id = id;
+        this.text = text;
+        this.book = book;
+    }
+
+    public Comment(String mId, String text, Book book) {
+        this.mId = mId;
         this.text = text;
         this.book = book;
     }

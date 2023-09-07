@@ -15,11 +15,17 @@ public class Genre {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    private String mId;
 
     @Column(name = "name", unique = true)
     private String name;
 
     public Genre(String name) {
+        this.name = name;
+    }
+
+    public Genre(String mId, String name) {
+        this.mId = mId;
         this.name = name;
     }
 }

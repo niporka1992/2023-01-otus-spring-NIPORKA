@@ -9,7 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class Homework14Application {
 
     public static void main(String[] args) {
-        System.out.println("http://localhost:8080/");
         SpringApplication.run(Homework14Application.class, args);
     }
 }

@@ -2,23 +2,18 @@ package ru.otus.spring.entities;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "books")
-@NamedEntityGraph(name = "book-author-genre-graph", attributeNodes = {
-        @NamedAttributeNode("author"),
-        @NamedAttributeNode("genre")})
-
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    private String mId;
 
     @Column(name = "name")
     private String name;
@@ -34,17 +29,26 @@ public class Book {
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Comment> comments;
 
-    public Book(String name, Author author, Genre genre) {
+    public Book(String name, Author author, Genre genre, List<Comment> comment) {
         this.name = name;
         this.genre = genre;
         this.author = author;
+        this.comments = comment;
     }
 
-    public Book(long id, String name, Author author, Genre genre) {
+    public Book(long id, String name, Author author, Genre genre, List<Comment> comment) {
         this.id = id;
         this.name = name;
         this.author = author;
         this.genre = genre;
+        this.comments = comment;
+    }
+    public Book(String id, String name, Author author, Genre genre, List<Comment> comment) {
+        this.mId = id;
+        this.name = name;
+        this.author = author;
+        this.genre = genre;
+        this.comments = comment;
     }
 
     public Book(long id) {
