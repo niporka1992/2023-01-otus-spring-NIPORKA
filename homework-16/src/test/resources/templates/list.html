@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>List of all books</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        books {
+            border: 1px solid steelblue;
+            width: 300px;
+            border-collapse: collapse;
+        }
+
+        .persons tr td, th {
+            padding: 5px;
+            border: 1px solid steelblue;
+        }
+
+        .persons td:last-child, td:first-child {
+            width: 50px;
+        }
+    </style>
+</head>
+<body>
+<h3>Books:</h3>
+
+<a href="edit.html" th:href="@{/create} ">Create new Book</a>
+<table border="2"  class="books">
+    <thead>
+    <tr>
+        <th bgcolor="red">ID</th>
+        <th bgcolor="red">Name</th>
+        <th bgcolor="red">Author</th>
+        <th bgcolor="red">Genre</th>
+        <th bgcolor="red">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${books}">
+        <td th:text="${book.id}"></td>
+        <td th:text="${book.name}"></td>
+        <td th:text="${book.author?.name}"></td>
+        <td th:text="${book.genre?.name}"></td>
+        <td>
+            <a href="edit.html" th:href="@{/edit(id=${book.getId()})}">Edit</a>
+            <a href="list.html" th:href="@{/delete(id=${book.id})}">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
