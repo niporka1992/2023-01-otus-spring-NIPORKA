@@ -1,0 +1,29 @@
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: library
+  level:
+    ROOT: info
+
+mongock:
+  change-logs-scan-package:
+    - ru.otus.spring.mongock
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, logfile, metrics
+  endpoint:
+    health:
+      show-details: when_authorized
+      roles: ADMIN
+
+logging:
+  file:
+    name: log/book_storage_log.log
