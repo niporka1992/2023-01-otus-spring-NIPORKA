@@ -4,6 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import ru.otus.spring.domain.Caterpillar;
+import ru.otus.spring.config.Incubator;
 
 @SpringBootApplication
 public class Homework15Application {

@@ -49,9 +49,9 @@ public class IntegrationConfig {
     @Bean
     public IntegrationFlow incubatorFlow() {
         return IntegrationFlow.from("caterpillarsChannel")
-                .handle("incubatorService", "processFattening")
-                .handle("incubatorService", "processPupation")
-                .handle("incubatorService", "processTransformation")
+                .handle(incubatorService, "processFattening")
+                .handle(incubatorService, "processPupation")
+                .handle(incubatorService, "processTransformation")
                 .transform(transformer())
                 .channel("butterfliesChannel")
                 .get();

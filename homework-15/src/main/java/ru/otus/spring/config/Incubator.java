@@ -1,13 +1,13 @@
-package ru.otus.spring;
+package ru.otus.spring.config;
 
 import org.springframework.integration.annotation.Gateway;
 import org.springframework.integration.annotation.MessagingGateway;
-import org.springframework.stereotype.Component;
+import ru.otus.spring.domain.Butterfly;
 import ru.otus.spring.domain.Caterpillar;
 
 @MessagingGateway
-@Component
-public interface Transformer {
+@SuppressWarnings("all")
+public interface Incubator {
     @Gateway(requestChannel = "caterpillarsChannel", replyChannel = "butterfliesChannel")
-    void process(Caterpillar caterpillar);
+    Butterfly process(Caterpillar caterpillar);
 }
