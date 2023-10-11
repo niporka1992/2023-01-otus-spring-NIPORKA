@@ -1,0 +1,31 @@
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: library
+  datasource:
+    url: jdbc:mysql://localhost:3306/library
+    username: root
+    password: 123
+  sql:
+    init:
+      schema-locations: classpath:schema.sql
+      mode: always
+  batch:
+    jdbc:
+      initialize-schema: always
+    job:
+      enabled: false
+
+mongock:
+  change-logs-scan-package:
+    - ru.otus.spring.mongock.changelog
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local
+
+logging:
+  level:
+    org.springframework.security: debug
