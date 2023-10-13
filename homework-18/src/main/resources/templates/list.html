@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
+    <meta charset="UTF-8"/>
+    <title>List of all books</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        books {
+            border: 1px solid steelblue;
+            width: 300px;
+            border-collapse: collapse;
+        }
+
+        .persons tr td, th {
+            padding: 5px;
+            border: 1px solid steelblue;
+        }
+
+        .persons td:last-child, td:first-child {
+            width: 50px;
+        }
+    </style>
+</head>
+<body>
+
+<h3>Books:</h3>
+<a href="edit.html" th:href="@{/create}" th:if="${currentUserRole != 'ROLE_USER'}">
+    <img height="2%" id="dagger" src="add-book.png" width="2%"/>
+</a>
+
+
+<table border="2" class="books">
+    <thead>
+    <tr>
+        <th bgcolor="red">ID</th>
+        <th bgcolor="red">Name</th>
+        <th bgcolor="red">Author</th>
+        <th bgcolor="red">Genre</th>
+        <th bgcolor="red">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${books}">
+        <td th:text="${book.id}"></td>
+        <td th:text="${book.name}"></td>
+        <td th:text="${book.author?.name}"></td>
+        <td th:text="${book.genre?.name}"></td>
+        <td>
+
+            <button th:if="${currentUserRole != 'ROLE_USER'}" type="submit">
+                <a href="edit.html" th:href="@{/edit(id=${book.getId()})}">
+                    <img height="32" src="modify-book.png" width="32"/>
+                </a>
+            </button>
+
+            <form action="list.html" id="edit-form" th:action="@{/delete(id=${book.id})}"
+                  th:if="${currentUserRole != 'ROLE_USER'}"
+                  th:method="post" th:object="${book}">
+                <div class="row">
+                    <button type="submit">
+                        <img alt="" height="32" src="delete-book.jpg" width="32"/>
+                    </button>
+                </div>
+            </form>
+
+        </td>
+
+    </tr>
+
+    </tbody>
+</table>
+
+<form class="logout-form" method="post" th:action="@{/logout}">
+    <button type="submit">Logout</button>
+</form>
+</body>
+
+</html>

@@ -1,0 +1,61 @@
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: library
+
+  level:
+    ROOT: info
+
+mongock:
+  change-logs-scan-package:
+    - ru.otus.spring.mongock
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, logfile, metrics
+  endpoint:
+    health:
+      show-details: when_authorized
+      roles: ADMIN
+
+logging:
+  file:
+    name: log/book_storage_log.log
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        slidingWindowSize: 10
+        permittedNumberOfCallsInHalfOpenState: 2
+        waitDurationInOpenState: 5000
+        failureRateThreshold: 50
+        eventConsumerBufferSize: 10
+        registerHealthIndicator: true
+    instances:
+      backendA:
+        baseConfig: default
+
+  retry:
+    configs:
+      customRetryConfig:
+        max-attempts: 3
+        waitDuration: 500
+    instances:
+      backendA:
+        baseConfig: customRetryConfig
+
+  ratelimiter:
+    configs:
+      customRateLimiterConfig:
+        limitForPeriod: 10
+        limitRefreshPeriod: 1s
+    instances:
+      backendA:
+        baseConfig: customRateLimiterConfig
